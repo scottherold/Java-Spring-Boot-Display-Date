@@ -5,6 +5,7 @@ import java.util.Date;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 // Sets up class as a controller that can return views
@@ -19,31 +20,31 @@ public class MainController {
 		return "index.jsp";
 	}
 	
-	// GET route for date
-	@RequestMapping("/date")
+	// GET route for date/time
+	@RequestMapping("/{dateTime}")
 	
 	// Model allows data injection into JSP rendered
-	public String date(Model model) {		
-		// Create formatting
-		String pattern = "EEEEE', the' d ' of 'MMMMM',' yyyy";
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+	public String date(@PathVariable("dateTime") String dateTime, Model model) {		
+		// Event handler for URL
+		if (dateTime.equals("date")) {
+			// Create formatting
+			String pattern = "EEEEE', the' d ' of 'MMMMM',' yyyy";
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+			
+			// Sends formatted date to JSP page
+			model.addAttribute("date", simpleDateFormat.format(new Date()));
+			return "date.jsp";
+		} else if (dateTime.equals("time")) {
+			// Create formatting
+			String pattern = "h:mm a";
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+			
+			// Sends formatted date to JSP page
+			model.addAttribute("time", simpleDateFormat.format(new Date()));
+			return "time.jsp";
+		} else {
+			return "index.jsp";
+		}
 		
-		// Sends formatted date to JSP page
-		model.addAttribute("date", simpleDateFormat.format(new Date()));
-		return "date.jsp";
-	}
-	
-	// GET route for time
-	@RequestMapping("/time")
-	
-	// Model allows data injection into the JSP rendered
-	public String time(Model model) {
-		// Create formatting
-		String pattern = "h:mm a";
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-		
-		// Sends formatted date to JSP page
-		model.addAttribute("time", simpleDateFormat.format(new Date()));
-		return "time.jsp";
 	}
 }
